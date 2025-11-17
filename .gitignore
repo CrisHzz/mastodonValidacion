@@ -79,3 +79,24 @@ docker-compose.override.yml
 
 *storybook.log
 storybook-static
+# =====================================
+# Custom ignore rules for your setup
+# =====================================
+
+# Docker volumes/data (MUY IMPORTANTE - NO subir DB ni Redis)
+/docker
+/docker-data
+/data
+/postgres-data
+/redis-data
+/elasticsearch-data
+/storage
+
+# Mastodon local uploads (media)
+/storage
+
+# Extra environment files - NO deben subirse
+.env.development
+.env.local
+.env.test
+.env.*

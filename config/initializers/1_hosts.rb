@@ -31,6 +31,9 @@ Rails.application.configure do
     config.hosts << host if host.present?
     config.hosts << web_host if web_host.present?
     config.hosts.concat(alternate_domains) if alternate_domains.present?
+    # Permitir localhost e IP local para desarrollo
+    config.hosts << '127.0.0.1'
+    config.hosts << '127.0.0.1:3000'
     config.host_authorization = { exclude: ->(request) { request.path == '/health' } }
   end
 end
