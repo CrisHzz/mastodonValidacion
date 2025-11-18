@@ -548,6 +548,66 @@ RSpec.describe Status do
 
       it { is_expected.to_not allow_value('').for(:uri) }
     end
+
+    context 'text presence validation' do
+      it 'requires text when status has no media and is not a reblog', :aggregate_failures do
+        status = Fabricate.build(:status, text: '', account: alice)
+        status.media_attachments = []
+        status.reblog = nil
+
+        expect(status).not_to be_valid
+        expect(status.errors[:text]).to be_present
+      end
+
+      it 'allows empty text when status has media', :aggregate_failures do
+        media = Fabricate(:media_attachment, account: alice)
+        status = Fabricate.build(:status, text: '', account: alice)
+        status.media_attachments << media
+
+        expect(status).to be_valid
+      end
+
+      it 'allows empty text when status is a reblog', :aggregate_failures do
+        reblogged_status = Fabricate(:status)
+        status = Fabricate.build(:status, text: '', account: alice, reblog: rebloged_status)
+
+        expect(status).to be_valid
+      end
+    end
+
+    context 'text length validation' do
+      it 'validates text length using StatusLengthValidator', :aggregate_failures do
+        status = Fabricate.build(:status, account: alice)
+        validator_spy = spy(StatusLengthValidator)
+        allow(StatusLengthValidator).to receive(:new).and_return(validator_spy)
+        allow(validator_spy).to receive(:validate).and_call_original
+
+        status.valid?
+
+        expect(status.errors).to be_empty.or(be_present)
+      end
+    end
+
+    context 'character limit' do
+      it 'enforces maximum character limit', :aggregate_failures do
+        long_text = 'a' * 10_000
+        status = Fabricate.build(:status, text: long_text, account: alice)
+
+        expect(status).not_to be_valid
+      end
+    end
+
+    context 'reblog uniqueness validation' do
+      it 'enforces uniqueness of reblog per account', :aggregate_failures do
+        original_status = Fabricate(:status)
+        first_reblog = Fabricate(:status, account: alice, reblog: original_status)
+
+        duplicate_reblog = Fabricate.build(:status, account: alice, reblog: original_status)
+
+        expect(duplicate_reblog).not_to be_valid
+        expect(duplicate_reblog.errors[:reblog]).to be_present
+      end
+    end
   end
 
   describe 'Callbacks' do

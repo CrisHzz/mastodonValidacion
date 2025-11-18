@@ -336,6 +336,93 @@ RSpec.describe PostStatusService do
     expect(status2.id).to eq status1.id
   end
 
+  context 'with test doubles and mocks' do
+    let(:account) { Fabricate(:account) }
+    let(:mock_status) { instance_double(Status, id: 123, persisted?: true, save!: true) }
+    let(:mock_media) { instance_double(MediaAttachment, id: 456, not_processed?: false, audio_or_video?: false) }
+
+    describe 'status creation flow with mocks' do
+      before do
+        allow(account.statuses).to receive(:new).and_return(mock_status)
+        allow(mock_status).to receive(:save!).and_return(true)
+        allow(ProcessMentionsService).to receive(:new).and_return(instance_double(ProcessMentionsService, call: true))
+        allow(ProcessHashtagsService).to receive(:new).and_return(instance_double(ProcessHashtagsService, call: true))
+        allow(DistributionWorker).to receive(:perform_async)
+        allow(ActivityPub::DistributionWorker).to receive(:perform_async)
+        allow(LinkCrawlWorker).to receive(:perform_async)
+        allow(Antispam).to receive(:new).and_return(instance_double(Antispam, local_preflight_check!: true))
+      end
+
+      it 'calls Status.create! through account.statuses.new', :aggregate_failures do
+        allow(account.statuses).to receive(:new).and_call_original
+
+        status = subject.call(account, text: 'test status')
+
+        expect(account.statuses).to have_received(:new)
+        expect(status).to be_persisted
+      end
+
+      it 'sanitizes text before creating status', :aggregate_failures do
+        status = subject.call(account, text: '  test status  ')
+
+        expect(status.text).to eq('test status')
+      end
+    end
+
+    describe 'media attachment handling with stubs' do
+      let(:media_attachment) { Fabricate(:media_attachment, account: account) }
+
+      before do
+        allow(PostProcessMediaWorker).to receive(:perform_async)
+      end
+
+      it 'attaches media to status without enqueueing PostProcessMediaWorker for already processed media', :aggregate_failures do
+        allow(media_attachment).to receive(:not_processed?).and_return(false)
+
+        status = subject.call(account, text: 'test', media_ids: [media_attachment.id])
+
+        expect(media_attachment.reload.status).to eq(status)
+        expect(PostProcessMediaWorker).not_to have_received(:perform_async)
+      end
+
+      it 'validates media belongs to account', :aggregate_failures do
+        other_account = Fabricate(:account)
+        other_media = Fabricate(:media_attachment, account: other_account)
+
+        expect do
+          subject.call(account, text: 'test', media_ids: [other_media.id])
+        end.to raise_error(Mastodon::ValidationError)
+      end
+    end
+
+    describe 'job enqueueing with mocks' do
+      before do
+        allow(DistributionWorker).to receive(:perform_async)
+        allow(ActivityPub::DistributionWorker).to receive(:perform_async)
+        allow(LinkCrawlWorker).to receive(:perform_async)
+        allow(ProcessHashtagsService).to receive(:new).and_return(instance_double(ProcessHashtagsService, call: true))
+      end
+
+      it 'enqueues DistributionWorker after status creation', :aggregate_failures do
+        status = subject.call(account, text: 'test status')
+
+        expect(DistributionWorker).to have_received(:perform_async).with(status.id)
+      end
+
+      it 'enqueues ActivityPub::DistributionWorker after status creation', :aggregate_failures do
+        status = subject.call(account, text: 'test status')
+
+        expect(ActivityPub::DistributionWorker).to have_received(:perform_async).with(status.id)
+      end
+
+      it 'enqueues LinkCrawlWorker after status creation', :aggregate_failures do
+        status = subject.call(account, text: 'test status')
+
+        expect(LinkCrawlWorker).to have_received(:perform_async).with(status.id)
+      end
+    end
+  end
+
   def create_status_with_options(**options)
     subject.call(Fabricate(:account), options.merge(text: 'test'))
   end

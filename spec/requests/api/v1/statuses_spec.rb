@@ -396,6 +396,53 @@ RSpec.describe '/api/v1/statuses' do
         end
       end
 
+      context 'with test doubles for PostStatusService' do
+        let(:mock_status) { double('Status', id: 123, persisted?: true, is_a?: false) }
+        let(:post_status_service) { instance_double(PostStatusService) }
+
+        before do
+          allow(PostStatusService).to receive(:new).and_return(post_status_service)
+          allow(post_status_service).to receive(:call).and_return(mock_status)
+        end
+
+        it 'calls PostStatusService with correct parameters', :aggregate_failures do
+          subject
+
+          expect(PostStatusService).to have_received(:new)
+          expect(post_status_service).to have_received(:call).with(
+            user.account,
+            hash_including(
+              text: 'Hello world',
+              visibility: nil,
+              sensitive: nil,
+              spoiler_text: nil,
+              language: nil,
+              media_ids: nil,
+              poll: nil
+            )
+          )
+        end
+
+        it 'returns JSON response with status data', :aggregate_failures do
+          subject
+
+          expect(response).to have_http_status(200)
+          expect(response.content_type).to start_with('application/json')
+        end
+      end
+
+      context 'with media attachments using doubles' do
+        let(:media_attachment) { Fabricate(:media_attachment, account: user.account) }
+        let(:params) { { status: 'Hello world', media_ids: [media_attachment.id] } }
+
+        it 'creates status with media attachments', :aggregate_failures do
+          expect { subject }.to change(user.account.statuses, :count).by(1)
+
+          expect(response).to have_http_status(200)
+          expect(media_attachment.reload.status_id).to be_present
+        end
+      end
+
       context 'with missing thread' do
         let(:params) { { status: 'Hello world', in_reply_to_id: 0 } }
 
