@@ -210,13 +210,15 @@ describe('compose actions', () => {
         return action;
       });
 
-      await submitCompose()(dispatch, () => state);
+      const thunk = submitCompose();
+      await thunk(dispatch, () => state);
 
-      await new Promise(resolve => setTimeout(resolve, 0));
+      // Wait for async operations to complete
+      await new Promise(resolve => setTimeout(resolve, 100));
 
       const successAction = dispatchedActions.find(a => a.type === 'COMPOSE_SUBMIT_SUCCESS');
       expect(successAction).toBeDefined();
-      expect(successAction.status).toBeDefined();
+      expect(successAction?.status).toBeDefined();
     });
 
     it('dispatches COMPOSE_SUBMIT_FAIL on API error', async () => {

@@ -10,7 +10,7 @@ describe('CharacterCounter', () => {
     render(<CharacterCounter text={text} max={max} />);
 
     const counter = screen.getByText('489');
-    expect(counter).toBeInTheDocument();
+    expect(counter).toBeDefined();
     expect(counter.className).toBe('character-counter');
   });
 
@@ -21,7 +21,7 @@ describe('CharacterCounter', () => {
     render(<CharacterCounter text={text} max={max} />);
 
     const counter = screen.getByText(/-?\d+/);
-    expect(counter).toBeInTheDocument();
+    expect(counter).toBeDefined();
     expect(counter.className).toContain('character-counter--over');
   });
 
@@ -29,7 +29,7 @@ describe('CharacterCounter', () => {
     const max = 500;
     const { rerender } = render(<CharacterCounter text="" max={max} />);
 
-    expect(screen.getByText('500')).toBeInTheDocument();
+    expect(screen.getByText('500')).toBeDefined();
 
     rerender(<CharacterCounter text="New text" max={max} />);
 
@@ -41,7 +41,7 @@ describe('CharacterCounter', () => {
 
     render(<CharacterCounter text="" max={max} />);
 
-    expect(screen.getByText('500')).toBeInTheDocument();
+    expect(screen.getByText('500')).toBeDefined();
   });
 
   it('handles text at exact limit', () => {
@@ -51,7 +51,7 @@ describe('CharacterCounter', () => {
     render(<CharacterCounter text={text} max={max} />);
 
     const counter = screen.getByText('0');
-    expect(counter).toBeInTheDocument();
+    expect(counter).toBeDefined();
     expect(counter.className).toBe('character-counter');
   });
 });

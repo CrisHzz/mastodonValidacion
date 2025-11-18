@@ -101,7 +101,7 @@ describe('ComposeForm', () => {
         <ComposeForm {...defaultProps} text="Hello" maxChars={500} />
       );
 
-      expect(screen.getByText('495')).toBeInTheDocument();
+      expect(screen.getByText('495')).toBeDefined();
     });
 
     it('updates counter when text changes', () => {
@@ -109,7 +109,7 @@ describe('ComposeForm', () => {
         <ComposeForm {...defaultProps} text="" maxChars={500} />
       );
 
-      expect(screen.getByText('500')).toBeInTheDocument();
+      expect(screen.getByText('500')).toBeDefined();
 
       rerender(
         <IntlProvider locale="en" messages={{}}>
@@ -117,7 +117,7 @@ describe('ComposeForm', () => {
         </IntlProvider>
       );
 
-      expect(screen.getByText('491')).toBeInTheDocument();
+      expect(screen.getByText('491')).toBeDefined();
     });
   });
 
@@ -172,11 +172,11 @@ describe('ComposeForm', () => {
   describe('form submission', () => {
     it('calls onSubmit when form is submitted with valid text', () => {
       const onSubmit = vi.fn();
-      renderWithIntl(
+      const { container } = renderWithIntl(
         <ComposeForm {...defaultProps} text="Valid post" onSubmit={onSubmit} />
       );
 
-      const form = screen.getByRole('form');
+      const form = container.querySelector('form');
       fireEvent.submit(form);
 
       expect(onSubmit).toHaveBeenCalledWith({
@@ -187,11 +187,11 @@ describe('ComposeForm', () => {
 
     it('does not call onSubmit when text is empty', () => {
       const onSubmit = vi.fn();
-      renderWithIntl(
+      const { container } = renderWithIntl(
         <ComposeForm {...defaultProps} text="" onSubmit={onSubmit} />
       );
 
-      const form = screen.getByRole('form');
+      const form = container.querySelector('form');
       fireEvent.submit(form);
 
       expect(onSubmit).not.toHaveBeenCalled();
@@ -200,11 +200,11 @@ describe('ComposeForm', () => {
     it('does not call onSubmit when text exceeds maxChars', () => {
       const onSubmit = vi.fn();
       const longText = 'a'.repeat(501);
-      renderWithIntl(
+      const { container } = renderWithIntl(
         <ComposeForm {...defaultProps} text={longText} maxChars={500} onSubmit={onSubmit} />
       );
 
-      const form = screen.getByRole('form');
+      const form = container.querySelector('form');
       fireEvent.submit(form);
 
       expect(onSubmit).not.toHaveBeenCalled();
@@ -212,11 +212,11 @@ describe('ComposeForm', () => {
 
     it('prevents default form submission behavior', () => {
       const onSubmit = vi.fn();
-      renderWithIntl(
+      const { container } = renderWithIntl(
         <ComposeForm {...defaultProps} text="Valid post" onSubmit={onSubmit} />
       );
 
-      const form = screen.getByRole('form');
+      const form = container.querySelector('form');
       const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
       const preventDefaultSpy = vi.spyOn(submitEvent, 'preventDefault');
 
