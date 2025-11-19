@@ -103,7 +103,7 @@ class HashtagTimeline extends PureComponent {
     let all  = (tags.all || []).map(tag => tag.value);
     let none = (tags.none || []).map(tag => tag.value);
 
-    [id, ...any].map(tag => {
+    [id, ...any].forEach(tag => {
       this.disconnects.push(dispatch(connectHashtagStream(id, tag, local, status => {
         let tags = status.tags.map(tag => tag.name);
 
@@ -114,7 +114,7 @@ class HashtagTimeline extends PureComponent {
   }
 
   _unsubscribe () {
-    this.disconnects.map(disconnect => disconnect());
+    this.disconnects.forEach(disconnect => disconnect());
     this.disconnects = [];
   }
 

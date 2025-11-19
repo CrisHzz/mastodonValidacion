@@ -370,7 +370,8 @@ class UI extends PureComponent {
   };
 
   handleDonate = () => {
-    location.href = 'https://joinmastodon.org/sponsors#donate'
+    location.href = 'https://joinmastodon.org/sponsors#donate';
+    return true;
   }
 
   componentDidMount () {

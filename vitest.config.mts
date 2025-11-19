@@ -51,6 +51,21 @@ const legacyTests: TestProjectInlineConfiguration = {
     ],
     globals: true,
     setupFiles: ['fake-indexeddb/auto'],
+    coverage: {
+      enabled: true,
+      provider: 'v8',
+      reporter: ['text', 'lcov', 'html'],
+      reportsDirectory: './coverage',
+      include: ['app/javascript/**/*.{js,jsx,ts,tsx}'],
+      exclude: [
+        '**/node_modules/**',
+        '**/__tests__/**',
+        '**/*.test.{js,jsx,ts,tsx}',
+        '**/*.spec.{js,jsx,ts,tsx}',
+        '**/dist/**',
+        '**/build/**',
+      ],
+    },
   },
 };
 
