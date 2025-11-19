@@ -1,0 +1,31 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": ".",
+    "module": "commonjs",
+    "target": "ES2020",
+    "lib": ["ES2020"],
+    "types": ["node", "@playwright/test"],
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "resolveJsonModule": true,
+    "moduleResolution": "node",
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {},
+    "typeRoots": ["./node_modules/@types", "../node_modules/@types"]
+  },
+  "include": [
+    "screenplay/**/*.ts",
+    "fixtures/**/*.ts",
+    "../playwright.config.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "../app/**/*",
+    "../config/**/*"
+  ]
+}
+

@@ -1,0 +1,9 @@
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
+
+# Screenshots y videos de tests fallidos
+/screenshots/
+/videos/
+

@@ -1,0 +1,99 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e5]:
+  - generic [ref=e7]:
+    - generic [ref=e8]:
+      - textbox "Search" [ref=e9]: mastodon
+      - generic [ref=e10]:
+        - img
+        - button "Clear search" [ref=e11] [cursor=pointer]:
+          - img "Clear search" [ref=e12]
+    - generic [ref=e14]:
+      - generic [ref=e16]:
+        - strong [ref=e17]: localhost
+        - text: is one of the many independent Mastodon servers you can use to participate in the fediverse.
+      - link [ref=e18] [cursor=pointer]:
+        - /url: /about
+      - generic [ref=e19]:
+        - generic [ref=e20]:
+          - heading "Administered by:" [level=4] [ref=e21]
+          - link "‌ ‌ ‌" [ref=e25] [cursor=pointer]:
+            - /url: /@undefined
+            - generic [ref=e27]: ‌
+            - generic [ref=e29]:
+              - strong [ref=e31]:
+                - generic [ref=e32]: ‌
+              - generic [ref=e34]: ‌
+        - generic [ref=e35]:
+          - heading "Server stats:" [level=4] [ref=e36]
+          - strong [ref=e37]: "1"
+          - generic "People using this server during the last 30 days (Monthly Active Users)" [ref=e38]: active users
+    - generic [ref=e40]:
+      - paragraph [ref=e41]:
+        - strong [ref=e42]: localhost
+        - text: ":"
+        - link "About" [ref=e43] [cursor=pointer]:
+          - /url: /about
+        - text: ·
+        - link "Profiles directory" [ref=e44] [cursor=pointer]:
+          - /url: /directory
+        - text: ·
+        - link "Privacy policy" [ref=e45] [cursor=pointer]:
+          - /url: /privacy-policy
+      - paragraph [ref=e46]:
+        - strong [ref=e47]: Mastodon
+        - text: ":"
+        - link "About" [ref=e48] [cursor=pointer]:
+          - /url: https://joinmastodon.org
+        - text: ·
+        - link "Get the app" [ref=e49] [cursor=pointer]:
+          - /url: https://joinmastodon.org/apps
+        - text: ·
+        - link "Keyboard shortcuts" [ref=e50] [cursor=pointer]:
+          - /url: /keyboard-shortcuts
+        - text: ·
+        - link "View source code" [ref=e51] [cursor=pointer]:
+          - /url: https://github.com/mastodon/mastodon
+        - text: ·
+        - generic [ref=e52]: v4.5.0
+  - generic [ref=e53]:
+    - heading "Search for \"mastodon\"" [level=1] [ref=e57] [cursor=pointer]:
+      - button "Search for \"mastodon\"" [ref=e58]:
+        - img [ref=e59]
+        - text: Search for "mastodon"
+    - region "Search for \"mastodon\"" [ref=e62]:
+      - generic [ref=e63]:
+        - button "All" [ref=e64] [cursor=pointer]
+        - button "Profiles" [ref=e65] [cursor=pointer]
+        - button "Hashtags" [ref=e66] [cursor=pointer]
+        - button "Posts" [ref=e67] [cursor=pointer]
+      - generic [ref=e69]:
+        - feed
+        - progressbar "Loading…" [ref=e71]:
+          - progressbar [ref=e72]
+  - generic [ref=e75]:
+    - link "Mastodon" [ref=e77] [cursor=pointer]:
+      - /url: /
+      - img "Mastodon" [ref=e78]
+    - generic [ref=e80]:
+      - link "Trending" [ref=e81] [cursor=pointer]:
+        - /url: /explore
+        - img [ref=e82]
+        - generic [ref=e84]: Trending
+      - link "Live feeds" [ref=e85] [cursor=pointer]:
+        - /url: /public/local
+        - img [ref=e86]
+        - generic [ref=e88]: Live feeds
+      - generic [ref=e89]:
+        - separator [ref=e90]
+        - generic [ref=e91]:
+          - paragraph [ref=e92]:
+            - strong [ref=e93]: Mastodon is the best way to keep up with what's happening.
+          - paragraph [ref=e94]: Follow anyone across the fediverse and see it all in chronological order. No algorithms, ads, or clickbait in sight.
+          - button "Create account" [ref=e95] [cursor=pointer]:
+            - generic [ref=e96]: Create account
+          - link "Login" [ref=e97] [cursor=pointer]:
+            - /url: /auth/sign_in
+            - generic [ref=e98]: Login
+```

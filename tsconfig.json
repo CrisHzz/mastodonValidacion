@@ -32,5 +32,9 @@
     "config/vite",
     "app/javascript",
     ".storybook/*"
+  ],
+  "exclude": [
+    "e2e/**/*",
+    "playwright.config.ts"
   ]
 }

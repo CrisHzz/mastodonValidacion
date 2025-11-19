@@ -1,0 +1,5 @@
+{
+  "testDir": "./screenplay/tests",
+  "testMatch": "**/*.spec.ts"
+}
+

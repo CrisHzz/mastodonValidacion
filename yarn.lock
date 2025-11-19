@@ -2730,6 +2730,7 @@ __metadata:
     "@gamestdio/websocket": "npm:^0.3.2"
     "@github/webauthn-json": "npm:^2.1.1"
     "@optimize-lodash/rollup-plugin": "npm:^5.0.2"
+    "@playwright/test": "npm:^1.56.1"
     "@rails/ujs": "npm:7.1.600"
     "@react-spring/web": "npm:^9.7.5"
     "@reduxjs/toolkit": "npm:^2.0.1"
@@ -3210,6 +3211,17 @@ __metadata:
   version: 0.11.0
   resolution: "@pkgjs/parseargs@npm:0.11.0"
   checksum: 10c0/5bd7576bb1b38a47a7fc7b51ac9f38748e772beebc56200450c4a817d712232b8f1d3ef70532c80840243c657d491cf6a6be1e3a214cff907645819fdc34aadd
+  languageName: node
+  linkType: hard
+
+"@playwright/test@npm:^1.56.1":
+  version: 1.56.1
+  resolution: "@playwright/test@npm:1.56.1"
+  dependencies:
+    playwright: "npm:1.56.1"
+  bin:
+    playwright: cli.js
+  checksum: 10c0/2b5b0e1f2e6a18f6e5ce6897c7440ca78f64e0b004834e9808e93ad2b78b96366b562ae4366602669cf8ad793a43d85481b58541e74be71e905e732d833dd691
   languageName: node
   linkType: hard
 
@@ -10492,7 +10504,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"playwright@npm:^1.56.1":
+"playwright@npm:1.56.1, playwright@npm:^1.56.1":
   version: 1.56.1
   resolution: "playwright@npm:1.56.1"
   dependencies:
