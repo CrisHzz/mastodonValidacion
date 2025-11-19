@@ -7,14 +7,11 @@ require 'minitest/mock'
 
 ActiveRecord::Migration.maintain_test_schema!
 
-# Rails.root.glob('spec/fabricators/**/*.rb').each { |f| require f }
 
 
 class ActiveSupport::TestCase
   include ActiveJob::TestHelper
 
   parallelize(workers: :number_of_processors)
-
-  fixtures :all
 end
 

@@ -1,0 +1,11 @@
+test_app:
+  name: Test app
+  website: http://testapp.com
+  owner_type: User
+  owner_id: <%= ActiveRecord::FixtureSet.identify(:alice, :users) %>
+  uid: test_app_uid_12345
+  secret: test_app_secret_67890
+  redirect_uri: urn:ietf:wg:oauth:2.0:oob
+  scopes: read write follow
+  created_at: <%= Time.now.utc %>
+  updated_at: <%= Time.now.utc %>

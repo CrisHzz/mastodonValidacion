@@ -1,0 +1,19 @@
+alice:
+  username: alice
+  public_key: "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAy\n-----END PUBLIC KEY-----\n"
+  created_at: <%= Time.now.utc %>
+  updated_at: <%= Time.now.utc %>
+
+bob:
+  username: bob
+  public_key: "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAz\n-----END PUBLIC KEY-----\n"
+  created_at: <%= Time.now.utc %>
+  updated_at: <%= Time.now.utc %>
+
+remote_account:
+  username: remote_user
+  domain: example.com
+  public_key: "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAx\n-----END PUBLIC KEY-----\n"
+  created_at: <%= Time.now.utc %>
+  updated_at: <%= Time.now.utc %>
+

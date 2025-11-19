@@ -1,0 +1,42 @@
+alice_poll:
+  account: alice
+  status: alice_status_with_poll
+  options: ['Option 1', 'Option 2']
+  expires_at: <%= 1.day.from_now %>
+  cached_tallies: [0, 0]
+  votes_count: 0
+  created_at: <%= Time.now.utc %>
+  updated_at: <%= Time.now.utc %>
+
+expired_poll:
+  account: alice
+  status: alice_status
+  options: ['Yes', 'No']
+  expires_at: <%= 1.day.ago %>
+  cached_tallies: [5, 3]
+  votes_count: 8
+  voters_count: 8
+  created_at: <%= 2.days.ago %>
+  updated_at: <%= 2.days.ago %>
+
+private_poll:
+  account: bob
+  status: private_status
+  options: ['Choice A', 'Choice B']
+  expires_at: <%= 1.day.from_now %>
+  cached_tallies: [0, 0]
+  votes_count: 0
+  created_at: <%= Time.now.utc %>
+  updated_at: <%= Time.now.utc %>
+
+remote_poll:
+  account: remote_account
+  status: remote_status
+  options: ['Remote Option 1', 'Remote Option 2']
+  expires_at: <%= 1.day.from_now %>
+  last_fetched_at: <%= 2.minutes.ago %>
+  cached_tallies: [0, 0]
+  votes_count: 0
+  created_at: <%= Time.now.utc %>
+  updated_at: <%= Time.now.utc %>
+

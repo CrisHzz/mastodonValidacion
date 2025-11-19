@@ -1,0 +1,31 @@
+alice_status:
+  text: "Hello world"
+  account: alice
+  created_at: <%= Time.now.utc %>
+  updated_at: <%= Time.now.utc %>
+
+alice_status_with_poll:
+  text: "What do you think?"
+  account: alice
+  created_at: <%= Time.now.utc %>
+  updated_at: <%= Time.now.utc %>
+
+bob_status:
+  text: "Another status"
+  account: bob
+  created_at: <%= Time.now.utc %>
+  updated_at: <%= Time.now.utc %>
+
+remote_status:
+  text: "Remote status"
+  account: remote_account
+  created_at: <%= Time.now.utc %>
+  updated_at: <%= Time.now.utc %>
+
+private_status:
+  text: "Private status"
+  account: bob
+  visibility: private
+  created_at: <%= Time.now.utc %>
+  updated_at: <%= Time.now.utc %>
+

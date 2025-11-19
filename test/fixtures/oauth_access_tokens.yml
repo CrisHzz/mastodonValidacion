@@ -1,0 +1,9 @@
+alice_token:
+  application_id: <%= ActiveRecord::FixtureSet.identify(:test_app, :oauth_applications) %>
+  resource_owner_id: <%= ActiveRecord::FixtureSet.identify(:alice, :users) %>
+  token: test_token_1234567890abcdef
+  refresh_token: test_refresh_token_1234567890abcdef
+  expires_in: 7200
+  scopes: read:statuses write:statuses
+  created_at: <%= Time.now.utc %>
+  last_used_at: <%= Time.now.utc %>
