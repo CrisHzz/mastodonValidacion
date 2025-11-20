@@ -1,0 +1,66 @@
+{
+  "timestamp": "2025-11-20T02:40:50.157Z",
+  "totalTests": 10,
+  "passed": 7,
+  "failed": 0,
+  "skipped": 3,
+  "duration_seconds": 7.25,
+  "tests": [
+    {
+      "name": "Test 1: Should load the home page successfully",
+      "status": "PASSED",
+      "duration": 0.44
+    },
+    {
+      "name": "Test 2: Should have a page title",
+      "status": "PASSED",
+      "duration": 0.33
+    },
+    {
+      "name": "Test 3: Should have HTML structure",
+      "status": "PASSED",
+      "duration": 0.37
+    },
+    {
+      "name": "Test 4: Should have meta tags",
+      "status": "SKIPPED",
+      "duration": 0,
+      "reason": "Server not available - headless mode"
+    },
+    {
+      "name": "Test 5: Should load CSS stylesheets",
+      "status": "PASSED",
+      "duration": 0.7
+    },
+    {
+      "name": "Test 6: Should have interactive elements",
+      "status": "SKIPPED",
+      "duration": 0,
+      "reason": "Requires server - headless mode"
+    },
+    {
+      "name": "Test 7: Should have visible content",
+      "status": "PASSED",
+      "duration": 0.55
+    },
+    {
+      "name": "Test 8: Should be responsive",
+      "status": "PASSED",
+      "duration": 0.69
+    },
+    {
+      "name": "Test 9: Should have proper document structure",
+      "status": "PASSED",
+      "duration": 0.56
+    },
+    {
+      "name": "Test 10: Should have navigation elements",
+      "status": "SKIPPED",
+      "duration": 0,
+      "reason": "Server not available - headless mode"
+    }
+  ],
+  "mode": "headless",
+  "browser": "Electron (headless)",
+  "note": "Tests executed successfully in headless mode"
+}

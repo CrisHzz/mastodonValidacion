@@ -1,0 +1,202 @@
+# Docker Compose para desarrollo local de Mastodon
+# Incluye todos los servicios necesarios: PostgreSQL, Redis, Elasticsearch (opcional)
+
+services:
+  db:
+    image: postgres:14-alpine
+    restart: unless-stopped
+    shm_size: 256mb
+    networks:
+      - internal_network
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-U', 'postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=mastodon_development
+    ports:
+      - '5432:5432'
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    networks:
+      - internal_network
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - redis_data:/data
+    ports:
+      - '6379:6379'
+
+  # Elasticsearch (opcional, descomenta si necesitas búsqueda avanzada)
+  es:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.4
+    restart: unless-stopped
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "xpack.license.self_generated.type=basic"
+      - "xpack.security.enabled=false"
+      - "xpack.watcher.enabled=false"
+      - "xpack.graph.enabled=false"
+      - "xpack.ml.enabled=false"
+      - "bootstrap.memory_lock=true"
+      - "cluster.name=es-mastodon"
+      - "discovery.type=single-node"
+      - "thread_pool.write.queue_size=1000"
+    networks:
+      - internal_network
+    healthcheck:
+      test: ["CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    ports:
+      - '9200:9200'
+
+  # Servicio web de Mastodon (Rails)
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file: .env.development
+    command: bundle exec puma -C config/puma.rb
+    networks:
+      - external_network
+      - internal_network
+    healthcheck:
+      test: ['CMD-SHELL', "curl -s --noproxy localhost localhost:3000/health | grep -q 'OK' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    ports:
+      - '3000:3000'
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      es:
+        condition: service_healthy
+    volumes:
+      - .:/opt/mastodon
+      - bundle_cache:/usr/local/bundle
+      - node_modules:/opt/mastodon/node_modules
+      - public_system:/opt/mastodon/public/system
+    environment:
+      - RAILS_ENV=development
+      - NODE_ENV=development
+      - DB_HOST=db
+      - DB_USER=postgres
+      - DB_NAME=mastodon_development
+      - DB_PASS=
+      - DB_PORT=5432
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - ES_ENABLED=true
+      - ES_HOST=es
+      - ES_PORT=9200
+      - LOCAL_DOMAIN=localhost:3000
+      - LOCAL_HTTPS=false
+
+  # Servicio de streaming de Mastodon (Node.js)
+  streaming:
+    build:
+      context: .
+      dockerfile: streaming/Dockerfile
+    restart: unless-stopped
+    env_file: .env.development
+    command: node ./streaming/index.js
+    networks:
+      - external_network
+      - internal_network
+    healthcheck:
+      test: ['CMD-SHELL', "curl -s --noproxy localhost localhost:4000/api/v1/streaming/health | grep -q 'OK' || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    ports:
+      - '4000:4000'
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./streaming:/opt/mastodon/streaming
+      - node_modules:/opt/mastodon/node_modules
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=db
+      - DB_USER=postgres
+      - DB_NAME=mastodon_development
+      - DB_PASS=
+      - DB_PORT=5432
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+
+  # Sidekiq para trabajos en segundo plano
+  sidekiq:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file: .env.development
+    command: bundle exec sidekiq
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - external_network
+      - internal_network
+    volumes:
+      - .:/opt/mastodon
+      - bundle_cache:/usr/local/bundle
+      - public_system:/opt/mastodon/public/system
+    environment:
+      - RAILS_ENV=development
+      - DB_HOST=db
+      - DB_USER=postgres
+      - DB_NAME=mastodon_development
+      - DB_PASS=
+      - DB_PORT=5432
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    healthcheck:
+      test: ['CMD-SHELL', "ps aux | grep '[s]idekiq' || false"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  external_network:
+  internal_network:
+    internal: true
+
+volumes:
+  postgres_data:
+  redis_data:
+  es_data:
+  bundle_cache:
+  node_modules:
+  public_system:

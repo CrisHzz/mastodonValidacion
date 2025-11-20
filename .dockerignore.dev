@@ -1,0 +1,74 @@
+# Archivos a ignorar en builds de Docker para desarrollo
+
+# Git
+.git
+.gitignore
+.gitattributes
+.github
+
+# Docker
+docker-compose*.yml
+Dockerfile*
+.dockerignore*
+
+# Documentación
+*.md
+docs/
+CHANGELOG*
+LICENSE
+AUTHORS*
+CONTRIBUTING*
+CODE_OF_CONDUCT*
+
+# Configuración local
+.env.production*
+.env.vagrant
+.env.test
+
+# Dependencias (se instalan en el contenedor)
+node_modules/
+vendor/bundle/
+.bundle/
+
+# Archivos temporales
+tmp/
+log/
+*.log
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Datos de desarrollo
+postgres/
+postgres14/
+redis/
+elasticsearch/
+public/system/
+public/assets/
+public/packs/
+public/packs-test/
+
+# IDE
+.vscode/
+.idea/
+*.sublime-*
+
+# Tests
+coverage/
+spec/tmp/
+.rspec_status
+
+# Build artifacts
+dist/
+storybook-static/
+
+# Yarn
+.yarn/cache
+.yarn/install-state.gz
+.pnp.*
+
+# Otros
+neo4j/
+chart/
+.scannerwork/

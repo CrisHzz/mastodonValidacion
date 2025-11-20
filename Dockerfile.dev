@@ -1,0 +1,88 @@
+# Dockerfile para desarrollo local de Mastodon
+# Optimizado para desarrollo con hot-reload y debugging
+
+FROM ruby:3.4.7-slim-trixie
+
+# Argumentos de construcción
+ARG UID=1000
+ARG GID=1000
+ARG NODE_MAJOR_VERSION=24
+
+# Variables de entorno
+ENV RAILS_ENV=development \
+    NODE_ENV=development \
+    DEBIAN_FRONTEND=noninteractive \
+    PATH="${PATH}:/opt/mastodon/bin" \
+    BIND="0.0.0.0"
+
+# Instalar dependencias del sistema
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    # Herramientas básicas
+    curl \
+    wget \
+    git \
+    build-essential \
+    # Dependencias de Ruby
+    libpq-dev \
+    libssl-dev \
+    libreadline-dev \
+    libyaml-dev \
+    libxml2-dev \
+    libxslt1-dev \
+    libicu-dev \
+    libidn-dev \
+    libgmp-dev \
+    # Dependencias de imágenes
+    libvips-dev \
+    libjpeg-dev \
+    libpng-dev \
+    libwebp-dev \
+    libgif-dev \
+    # FFmpeg para procesamiento de video
+    ffmpeg \
+    # Herramientas de desarrollo
+    vim \
+    nano \
+    less \
+    procps \
+    && rm -rf /var/lib/apt/lists/*
+
+# Instalar Node.js y Yarn
+RUN curl -fsSL https://deb.nodesource.com/setup_${NODE_MAJOR_VERSION}.x | bash - && \
+    apt-get install -y nodejs && \
+    corepack enable && \
+    corepack prepare yarn@stable --activate
+
+# Crear usuario mastodon
+RUN groupadd -g "${GID}" mastodon && \
+    useradd -l -u "${UID}" -g "${GID}" -m -d /opt/mastodon mastodon && \
+    ln -s /opt/mastodon /mastodon
+
+# Establecer directorio de trabajo
+WORKDIR /opt/mastodon
+
+# Copiar archivos de dependencias
+COPY --chown=mastodon:mastodon Gemfile Gemfile.lock ./
+COPY --chown=mastodon:mastodon package.json yarn.lock .yarnrc.yml ./
+COPY --chown=mastodon:mastodon .yarn ./.yarn
+
+# Cambiar a usuario mastodon
+USER mastodon
+
+# Instalar dependencias de Ruby
+RUN bundle config set --local deployment 'false' && \
+    bundle config set --local without 'production' && \
+    bundle install -j$(nproc)
+
+# Instalar dependencias de Node.js
+RUN yarn install
+
+# Copiar el resto del código
+COPY --chown=mastodon:mastodon . .
+
+# Exponer puertos
+EXPOSE 3000 4000
+
+# Comando por defecto
+CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]

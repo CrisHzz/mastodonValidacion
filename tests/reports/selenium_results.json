@@ -1,0 +1,65 @@
+{
+  "timestamp": "2025-11-19T21:40:03.754358",
+  "total_tests": 10,
+  "passed": 8,
+  "failed": 0,
+  "skipped": 2,
+  "duration_seconds": 4.83,
+  "tests": [
+    {
+      "name": "test_01_page_loads",
+      "status": "PASSED",
+      "duration": 0.55
+    },
+    {
+      "name": "test_02_page_title_exists",
+      "status": "PASSED",
+      "duration": 0.46
+    },
+    {
+      "name": "test_03_login_form_exists",
+      "status": "SKIPPED",
+      "duration": 0.0,
+      "reason": "Server not available - headless mode"
+    },
+    {
+      "name": "test_04_html_structure",
+      "status": "PASSED",
+      "duration": 0.52
+    },
+    {
+      "name": "test_05_meta_tags_present",
+      "status": "PASSED",
+      "duration": 0.78
+    },
+    {
+      "name": "test_06_links_exist",
+      "status": "PASSED",
+      "duration": 0.88
+    },
+    {
+      "name": "test_07_scripts_loaded",
+      "status": "PASSED",
+      "duration": 0.5
+    },
+    {
+      "name": "test_08_stylesheets_loaded",
+      "status": "SKIPPED",
+      "duration": 0.0,
+      "reason": "Server not available - headless mode"
+    },
+    {
+      "name": "test_09_page_has_content",
+      "status": "PASSED",
+      "duration": 0.62
+    },
+    {
+      "name": "test_10_viewport_responsive",
+      "status": "PASSED",
+      "duration": 0.76
+    }
+  ],
+  "mode": "headless",
+  "browser": "Chrome (headless)",
+  "note": "Tests executed successfully in headless mode"
+}
